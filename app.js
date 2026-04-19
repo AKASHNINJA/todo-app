@@ -1,69 +1,85 @@
-const input = document.getElementById('todo-input');
-const addBtn = document.getElementById('add-btn');
-const list = document.getElementById('todo-list');
-const footer = document.getElementById('footer');
-const itemsLeft = document.getElementById('items-left');
-const clearBtn = document.getElementById('clear-btn');
-const emptyState = document.getElementById('empty-state');
-const filterBtns = document.querySelectorAll('.filter-btn');
+const taskList    = document.getElementById('task-list');
+const emptyState  = document.getElementById('empty-state');
+const fab         = document.getElementById('fab');
+const modalOverlay = document.getElementById('modal-overlay');
+const modalClose  = document.getElementById('modal-close');
+const todoInput   = document.getElementById('todo-input');
+const addBtn      = document.getElementById('add-btn');
+const clearNavBtn = document.getElementById('clear-nav-btn');
+const tabs        = document.querySelectorAll('.tab');
+const priorityBtns = document.querySelectorAll('.priority-btn');
+const statTotal   = document.getElementById('stat-total');
+const statActive  = document.getElementById('stat-active');
+const statDone    = document.getElementById('stat-done');
 
-let todos = JSON.parse(localStorage.getItem('todos') || '[]');
-let filter = 'all';
+let todos    = JSON.parse(localStorage.getItem('todos') || '[]');
+let filter   = 'all';
+let priority = 'low';
 
 function save() {
   localStorage.setItem('todos', JSON.stringify(todos));
 }
 
 function getVisible() {
-  if (filter === 'active') return todos.filter(t => !t.done);
+  if (filter === 'active')    return todos.filter(t => !t.done);
   if (filter === 'completed') return todos.filter(t => t.done);
   return todos;
 }
 
+function updateStats() {
+  const total  = todos.length;
+  const done   = todos.filter(t => t.done).length;
+  statTotal.textContent  = total;
+  statActive.textContent = total - done;
+  statDone.textContent   = done;
+}
+
 function render() {
-  list.innerHTML = '';
+  taskList.innerHTML = '';
+  taskList.appendChild(emptyState);
+
   const visible = getVisible();
 
-  visible.forEach((todo) => {
-    const i = todos.indexOf(todo);
-    const li = document.createElement('li');
-    li.className = 'todo-item' + (todo.done ? ' done' : '');
+  if (visible.length === 0) {
+    emptyState.classList.add('visible');
+  } else {
+    emptyState.classList.remove('visible');
+    visible.forEach(todo => {
+      const i = todos.indexOf(todo);
+      const card = document.createElement('div');
+      card.className = 'task-card' + (todo.done ? ' done' : '');
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = todo.done;
-    checkbox.addEventListener('change', () => toggle(i));
+      const dot = document.createElement('div');
+      dot.className = `priority-dot ${todo.priority || 'low'}`;
 
-    const label = document.createElement('span');
-    label.className = 'label';
-    label.textContent = todo.text;
+      const checkbox = document.createElement('div');
+      checkbox.className = 'custom-checkbox' + (todo.done ? ' checked' : '');
+      checkbox.addEventListener('click', () => toggle(i));
 
-    const del = document.createElement('button');
-    del.className = 'delete-btn';
-    del.textContent = '✕';
-    del.title = 'Delete';
-    del.addEventListener('click', () => remove(i));
+      const text = document.createElement('span');
+      text.className = 'task-text';
+      text.textContent = todo.text;
 
-    li.append(checkbox, label, del);
-    list.appendChild(li);
-  });
+      const del = document.createElement('button');
+      del.className = 'delete-btn';
+      del.innerHTML = '✕';
+      del.title = 'Delete';
+      del.addEventListener('click', () => remove(i));
 
-  const remaining = todos.filter(t => !t.done).length;
-  const hasAny = todos.length > 0;
-
-  footer.style.display = hasAny ? 'flex' : 'none';
-  emptyState.style.display = visible.length === 0 ? 'block' : 'none';
-
-  if (hasAny) {
-    itemsLeft.textContent = `${remaining} item${remaining !== 1 ? 's' : ''} left`;
+      card.append(dot, checkbox, text, del);
+      taskList.appendChild(card);
+    });
   }
+
+  updateStats();
 }
 
 function addTodo() {
-  const text = input.value.trim();
+  const text = todoInput.value.trim();
   if (!text) return;
-  todos.unshift({ text, done: false });
-  input.value = '';
+  todos.unshift({ text, done: false, priority });
+  todoInput.value = '';
+  closeModal();
   save();
   render();
 }
@@ -80,21 +96,43 @@ function remove(i) {
   render();
 }
 
-addBtn.addEventListener('click', addTodo);
-input.addEventListener('keydown', e => { if (e.key === 'Enter') addTodo(); });
+function openModal() {
+  modalOverlay.classList.add('open');
+  setTimeout(() => todoInput.focus(), 300);
+}
 
-clearBtn.addEventListener('click', () => {
+function closeModal() {
+  modalOverlay.classList.remove('open');
+  todoInput.value = '';
+}
+
+fab.addEventListener('click', openModal);
+modalClose.addEventListener('click', closeModal);
+modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal(); });
+
+addBtn.addEventListener('click', addTodo);
+todoInput.addEventListener('keydown', e => { if (e.key === 'Enter') addTodo(); });
+
+clearNavBtn.addEventListener('click', () => {
   todos = todos.filter(t => !t.done);
   save();
   render();
 });
 
-filterBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    filter = btn.dataset.filter;
-    filterBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    filter = tab.dataset.filter;
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
     render();
+  });
+});
+
+priorityBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    priority = btn.dataset.priority;
+    priorityBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
   });
 });
 
