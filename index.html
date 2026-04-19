@@ -3,92 +3,233 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>Tasky</title>
+  <title>Akash Master Tracker</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+<div class="app">
 
-  <div class="app">
-
-    <!-- Header -->
-    <header class="header">
-      <div class="header-top">
-        <div>
-          <p class="greeting">Good day 👋</p>
-          <h1 class="header-title">My Tasks</h1>
-        </div>
-        <div class="avatar">A</div>
+  <!-- ── TOP HEADER ── -->
+  <header class="header">
+    <div class="header-top">
+      <div>
+        <p class="greeting" id="greeting">Good day 👋</p>
+        <h1 class="header-title" id="app-title">My Tasks</h1>
       </div>
-
-      <!-- Stats row -->
-      <div class="stats-row">
-        <div class="stat-card">
-          <span class="stat-num" id="stat-total">0</span>
-          <span class="stat-label">Total</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-num" id="stat-active">0</span>
-          <span class="stat-label">Active</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-num" id="stat-done">0</span>
-          <span class="stat-label">Done</span>
-        </div>
-      </div>
-    </header>
-
-    <!-- Filter tabs -->
-    <div class="tabs">
-      <button class="tab active" data-filter="all">All</button>
-      <button class="tab" data-filter="active">Active</button>
-      <button class="tab" data-filter="completed">Completed</button>
+      <div class="avatar">A</div>
     </div>
+    <div class="header-stats" id="header-stats"></div>
+  </header>
 
-    <!-- Task list -->
-    <main class="task-list" id="task-list">
-      <div class="empty-state" id="empty-state">
-        <div class="empty-icon">📋</div>
-        <p>No tasks here!</p>
-        <span>Tap + to add a new task</span>
+  <!-- ── VIEWS ── -->
+  <main class="view-container">
+
+    <!-- TASK TRACKER -->
+    <section class="view active" id="view-tasks">
+      <div class="tabs">
+        <button class="tab active" data-filter="all">All</button>
+        <button class="tab" data-filter="active">Active</button>
+        <button class="tab" data-filter="completed">Completed</button>
       </div>
-    </main>
-
-    <!-- FAB -->
-    <button class="fab" id="fab">+</button>
-
-    <!-- Bottom nav -->
-    <nav class="bottom-nav">
-      <button class="nav-btn active">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        <span>Tasks</span>
-      </button>
-      <button class="nav-btn" id="clear-nav-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-        <span>Clear Done</span>
-      </button>
-    </nav>
-  </div>
-
-  <!-- Add task modal -->
-  <div class="modal-overlay" id="modal-overlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>New Task</h2>
-        <button class="modal-close" id="modal-close">✕</button>
-      </div>
-      <input type="text" id="todo-input" placeholder="What needs to be done?" autocomplete="off" />
-      <div class="priority-row">
-        <span class="priority-label">Priority</span>
-        <div class="priority-options">
-          <button class="priority-btn active" data-priority="low">Low</button>
-          <button class="priority-btn" data-priority="medium">Medium</button>
-          <button class="priority-btn" data-priority="high">High</button>
+      <div class="task-list" id="task-list">
+        <div class="empty-state" id="task-empty">
+          <div class="empty-icon">📋</div>
+          <p>No tasks yet</p>
+          <span>Tap + to add a task</span>
         </div>
       </div>
-      <button class="add-btn" id="add-btn">Add Task</button>
-    </div>
-  </div>
+    </section>
 
-  <script src="app.js"></script>
+    <!-- WATER TRACKER -->
+    <section class="view" id="view-water">
+      <div class="water-hero">
+        <div class="ring-wrap">
+          <svg class="ring" viewBox="0 0 120 120">
+            <circle class="ring-bg" cx="60" cy="60" r="50"/>
+            <circle class="ring-fill" id="water-ring" cx="60" cy="60" r="50"/>
+          </svg>
+          <div class="ring-label">
+            <span class="ring-val" id="water-val">0</span>
+            <span class="ring-unit">/ <span id="water-goal-label">8</span> cups</span>
+          </div>
+        </div>
+        <p class="water-pct" id="water-pct">0% of daily goal</p>
+      </div>
+      <div class="quick-btns">
+        <button class="quick-btn" data-cups="1">+1 cup<span>250ml</span></button>
+        <button class="quick-btn" data-cups="2">+2 cups<span>500ml</span></button>
+        <button class="quick-btn" data-cups="4">+4 cups<span>1L</span></button>
+      </div>
+      <div class="section-label">Today's Log</div>
+      <div class="water-log" id="water-log">
+        <div class="empty-state" id="water-empty">
+          <div class="empty-icon">💧</div>
+          <p>No intake logged</p>
+          <span>Tap a button above to add</span>
+        </div>
+      </div>
+      <button class="reset-btn" id="water-reset">Reset Today</button>
+    </section>
+
+    <!-- FOOD TRACKER -->
+    <section class="view" id="view-food">
+      <div class="calorie-bar-wrap">
+        <div class="calorie-numbers">
+          <span><b id="food-consumed">0</b> kcal eaten</span>
+          <span id="food-remaining-label">Goal: <b id="food-goal-val">2000</b></span>
+        </div>
+        <div class="calorie-bar"><div class="calorie-fill" id="food-bar"></div></div>
+        <p class="calorie-sub" id="food-sub">2000 kcal remaining</p>
+      </div>
+      <div class="meal-tabs">
+        <button class="meal-tab active" data-meal="breakfast">🌅 Breakfast</button>
+        <button class="meal-tab" data-meal="lunch">☀️ Lunch</button>
+        <button class="meal-tab" data-meal="dinner">🌙 Dinner</button>
+        <button class="meal-tab" data-meal="snack">🍎 Snack</button>
+      </div>
+      <div class="food-list" id="food-list">
+        <div class="empty-state" id="food-empty">
+          <div class="empty-icon">🍽️</div>
+          <p>No meals logged</p>
+          <span>Tap + to add food</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FITNESS TRACKER -->
+    <section class="view" id="view-fitness">
+      <div class="fitness-hero">
+        <div class="streak-card">
+          <span class="streak-num" id="streak-num">0</span>
+          <span class="streak-label">Day Streak 🔥</span>
+        </div>
+        <div class="fitness-stats-row">
+          <div class="fit-stat"><span id="fit-today">0</span><small>Today</small></div>
+          <div class="fit-stat"><span id="fit-week">0</span><small>This Week</small></div>
+          <div class="fit-stat"><span id="fit-total">0</span><small>Total</small></div>
+        </div>
+      </div>
+      <div class="section-label">Today's Workouts</div>
+      <div class="fitness-list" id="fitness-list">
+        <div class="empty-state" id="fitness-empty">
+          <div class="empty-icon">💪</div>
+          <p>No workouts logged</p>
+          <span>Tap + to log a workout</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CUSTOM TRACKER -->
+    <section class="view" id="view-custom">
+      <div class="custom-grid" id="custom-grid">
+        <div class="empty-state" id="custom-empty">
+          <div class="empty-icon">⚙️</div>
+          <p>No custom trackers</p>
+          <span>Tap + to create one</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── FAB ── -->
+  <button class="fab" id="fab">+</button>
+
+  <!-- ── BOTTOM NAV ── -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-view="tasks">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      <span>Tasks</span>
+    </button>
+    <button class="nav-btn" data-view="water">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6 8 4 12 4 15a8 8 0 0016 0c0-3-2-7-8-13z"/></svg>
+      <span>Water</span>
+    </button>
+    <button class="nav-btn" data-view="food">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+      <span>Food</span>
+    </button>
+    <button class="nav-btn" data-view="fitness">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5h11M6.5 17.5h11M3 10h18M3 14h18"/></svg>
+      <span>Fitness</span>
+    </button>
+    <button class="nav-btn" data-view="custom">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+      <span>Custom</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ══════════════ MODALS ══════════════ -->
+
+<!-- Task Modal -->
+<div class="modal-overlay" id="modal-task">
+  <div class="modal">
+    <div class="modal-header"><h2>New Task</h2><button class="modal-close" data-modal="modal-task">✕</button></div>
+    <input type="text" id="task-input" placeholder="What needs to be done?" autocomplete="off" />
+    <div class="priority-row">
+      <span class="priority-label">Priority</span>
+      <div class="priority-options">
+        <button class="priority-btn active" data-priority="low">Low</button>
+        <button class="priority-btn" data-priority="medium">Medium</button>
+        <button class="priority-btn" data-priority="high">High</button>
+      </div>
+    </div>
+    <button class="add-btn" id="task-add-btn">Add Task</button>
+  </div>
+</div>
+
+<!-- Water Goal Modal -->
+<div class="modal-overlay" id="modal-water">
+  <div class="modal">
+    <div class="modal-header"><h2>Set Water Goal</h2><button class="modal-close" data-modal="modal-water">✕</button></div>
+    <input type="number" id="water-goal-input" placeholder="Daily goal in cups (e.g. 8)" min="1" max="30" />
+    <button class="add-btn" id="water-goal-btn">Set Goal</button>
+  </div>
+</div>
+
+<!-- Food Modal -->
+<div class="modal-overlay" id="modal-food">
+  <div class="modal">
+    <div class="modal-header"><h2>Add Food</h2><button class="modal-close" data-modal="modal-food">✕</button></div>
+    <input type="text" id="food-name-input" placeholder="Food name (e.g. Oats, Banana)" autocomplete="off" />
+    <input type="number" id="food-cal-input" placeholder="Calories (kcal)" min="0" />
+    <button class="add-btn" id="food-add-btn">Add Food</button>
+  </div>
+</div>
+
+<!-- Fitness Modal -->
+<div class="modal-overlay" id="modal-fitness">
+  <div class="modal">
+    <div class="modal-header"><h2>Log Workout</h2><button class="modal-close" data-modal="modal-fitness">✕</button></div>
+    <input type="text" id="fitness-name-input" placeholder="Exercise (e.g. Push-ups, Running)" autocomplete="off" />
+    <div class="two-col">
+      <input type="number" id="fitness-reps-input" placeholder="Reps / Minutes" min="0" />
+      <select id="fitness-type-input">
+        <option value="strength">Strength 💪</option>
+        <option value="cardio">Cardio 🏃</option>
+        <option value="flexibility">Flexibility 🧘</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <button class="add-btn" id="fitness-add-btn">Log Workout</button>
+  </div>
+</div>
+
+<!-- Custom Tracker Modal -->
+<div class="modal-overlay" id="modal-custom">
+  <div class="modal">
+    <div class="modal-header"><h2>New Tracker</h2><button class="modal-close" data-modal="modal-custom">✕</button></div>
+    <input type="text" id="custom-name-input" placeholder="Tracker name (e.g. Books Read)" autocomplete="off" />
+    <div class="two-col">
+      <input type="number" id="custom-goal-input" placeholder="Daily goal" min="1" />
+      <input type="text" id="custom-unit-input" placeholder="Unit (e.g. pages, km)" />
+    </div>
+    <input type="text" id="custom-icon-input" placeholder="Emoji icon (e.g. 📚)" maxlength="2" />
+    <button class="add-btn" id="custom-add-btn">Create Tracker</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
