@@ -78,3 +78,34 @@ npx serve .
 ## License
 
 MIT
+
+---
+
+## Orbit MVP (new stack)
+
+This repo now also contains an in-progress Orbit MVP implementation based on the PRD.
+
+- Mobile app: `mobile/` (Expo + React Native + Reanimated + Skia + Gesture Handler + Zustand)
+- Backend API: `api/` (Node + Hono + Zod + Drizzle + Inngest scaffold)
+- Prompts: `prompts/` (versioned prompt files)
+- Env template: `.env.example`
+
+### Run Orbit locally
+
+1. Start API:
+   - `cd api`
+   - `npm install`
+   - `npm run dev`
+2. Start mobile (separate terminal):
+   - `cd mobile`
+   - `npm install`
+   - `npm run web` (or `npm run ios` / `npm run android`)
+
+### Current Orbit coverage
+
+- Brain dump text input with agent parse request + strict Zod validation.
+- Gesture task cards (swipe right complete, swipe left snooze) with haptics.
+- Momentum planet visualization using Skia.
+- Shake-to-toggle focus mode using motion sensor.
+- Backend parser endpoint with retry-on-validation-failure logic.
+- Parser tests in `api/src/tests/parse.test.ts`.
