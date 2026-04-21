@@ -1,1 +1,6 @@
 .agent/push-approved.json
+node_modules/
+**/node_modules/
+api/dist/
+mobile/.expo/
+mobile/.expo-shared/
